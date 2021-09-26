@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Screen Locker</string>
+    <string name="admin_receiver_status">"recevier %s"</string>
+    <string name="admin_receiver_status_enabled">enable</string>
+    <string name="admin_receiver_status_disabled">disable</string>
+    <string name="sample_device_admin">權限請求</string>
+    <string name="sample_device_admin_description">請開啟權限，以免APP無法正常運行</string>
+    <string name="accessibility_service_description"><![CDATA["    <string name=\"accessibility_service_description\">An accessibility service to lock the screen from a Quick Settings tile.</string>"]]></string>
+</resources>
