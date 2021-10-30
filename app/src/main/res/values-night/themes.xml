@@ -15,7 +15,7 @@
 
 
         <!-- 全螢幕用 -->
-<!--        <item name="background">@android:color/transparent</item>-->
+        <!--        <item name="background">@android:color/transparent</item>-->
 
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -24,8 +24,16 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
 
-<!--        <item name="android:colorBackgroundCacheHint">@null</item>-->
-<!--        <item name="android:windowFullscreen">true</item>-->
+        <!--        <item name="android:colorBackgroundCacheHint">@null</item>-->
+        <!--        <item name="android:windowFullscreen">true</item>-->
+
+        <item name="android:windowAnimationStyle">@style/no_anim</item>
+        <item name="android:windowEnterAnimation">@style/no_anim</item>
+        <item name="android:activityOpenEnterAnimation">@style/no_anim</item>
 
     </style>
+
+    <style name="no_anim" parent="@android:style/Animation.Activity" />
+
+
 </resources>

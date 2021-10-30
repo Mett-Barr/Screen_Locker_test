@@ -2,30 +2,45 @@ package com.example.screenlocker
 
 import android.app.Activity
 import android.app.KeyguardManager
+import android.app.Service
 import android.app.admin.DevicePolicyManager
 import android.content.*
 import android.content.ContentValues.TAG
+import android.media.MediaPlayer
 import android.net.Uri
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.activity.result.contract.ActivityResultContracts
 import android.provider.Settings
 import android.util.Log
-import android.view.KeyEvent
-import android.view.WindowManager
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.core.content.ContentProviderCompat.requireContext
 import android.text.TextUtils
 import android.text.TextUtils.SimpleStringSplitter
-import android.view.WindowInsets
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.lifecycle.Observer
+
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appName: String
     private lateinit var dmp: DevicePolicyManager
+
+    private lateinit var vibrator: Vibrator
+    private var t: LongArray = longArrayOf(0, 5, 115, 6)
+    private var a: IntArray = intArrayOf(0, 255, 0, 255)
+
+    private lateinit var broadcastReceiver: MyReceiver
+
+
+//    private lateinit var mediaPlayer: MediaPlayer
+
 
     val startForResult =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -44,12 +59,25 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d("TAG", "onCreate: ")
+        broadcastInit()
+
+        Log.d("APP!!!", "onCreate: ")
+
+//        try {
+//            mediaPlayer = MediaPlayer.create(this, R.raw.coconut)
+//            mediaPlayer.start()
+//        } catch (e: NullPointerException) {
+//            Log.d(TAG, "onCreate: MediaPlayer null!!!")
+//        }
+        window.setDecorFitsSystemWindows(false)
+
+        vibrator = getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
+//        mediaPlayer.start()
+
 
 //        window.decorView.windowInsetsController?.hide(WindowInsets.Type.systemBars())
 //        window.attributes.screenBrightness = 0F
@@ -101,6 +129,7 @@ class MainActivity : AppCompatActivity() {
 //        Toast.makeText(this, i, Toast.LENGTH_SHORT).show()
 
 
+
         val mStringColonSplitter = SimpleStringSplitter(':')
 
         val settingValue = Settings.Secure.getString(
@@ -111,13 +140,22 @@ class MainActivity : AppCompatActivity() {
         while (mStringColonSplitter.hasNext()) {
             val accessibilityService = mStringColonSplitter.next()
 
-            Log.d("check", accessibilityService)
+//            Log.d("check", accessibilityService)
             if (accessibilityService.equals(appName, ignoreCase = true)) {
                 Log.d("check", "true")
+
+
+
+//                vibrator.vibrate(VibrationEffect.createWaveform(t, a, -1))
+
+
+
+//                Log.d("TAG", "permissionCheck: ")
+
                 break
             } else {
                 launchNotificationPermissionSettingsPageAndHighlight()
-                Log.d("check", "false")
+//                Log.d("check", "false")
                 break
             }
         }
@@ -140,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 
         try {
             startActivity(intent)
-            Log.d(TAG, "launchNotificationPermissionSettingsPageAndHighlight: ")
+            Log.d("TAG", "launchNotificationPermissionSettingsPageAndHighlight: ")
         } catch (e: Exception) {
         }
     }
@@ -191,6 +229,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        window.attributes.screenBrightness = -1F
+//        window.attributes.screenBrightness = -1F
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        mediaPlayer.release()
+        Log.d("APP!!!", "onDestroy: ")
+        unregisterReceiver(broadcastReceiver)
+    }
+
+    private fun broadcastInit() {
+        broadcastReceiver = MyReceiver(this)
+        IntentFilter().also {
+            it.addAction("finish")
+            this.registerReceiver(broadcastReceiver, it)
+        }
+    }
+
+
 }
