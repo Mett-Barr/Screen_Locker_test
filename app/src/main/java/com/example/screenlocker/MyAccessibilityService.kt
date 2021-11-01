@@ -1,18 +1,15 @@
 package com.example.screenlocker
 
 import android.accessibilityservice.AccessibilityService
-import android.app.Activity
 import android.app.Service
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.media.MediaPlayer
-import android.os.Binder
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityEvent.*
-import kotlin.system.exitProcess
 
 class MyAccessibilityService : AccessibilityService() {
     //    private var t: LongArray = longArrayOf(0, 3, 115, 3)
@@ -40,7 +37,7 @@ class MyAccessibilityService : AccessibilityService() {
             mediaPlayer = MediaPlayer.create(this, R.raw.coconut2)
             mediaPlayer.also { it ->
                 it.start()
-                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+//                if (it.isPlaying) performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
                 Log.d("APP!!!", "lock: start")
                 it.setOnCompletionListener {
 //                    mediaPlayer.release()
@@ -60,6 +57,8 @@ class MyAccessibilityService : AccessibilityService() {
                         -1
                     )
                 )
+
+                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
             }
         } catch (e: NullPointerException) {
             Log.d(TAG, "lock: MediaPlayer null!!!")

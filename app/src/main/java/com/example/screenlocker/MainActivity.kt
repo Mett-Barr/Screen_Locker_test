@@ -154,6 +154,7 @@ class MainActivity : AppCompatActivity() {
 
                 break
             } else {
+                Log.d("check", "false")
                 launchNotificationPermissionSettingsPageAndHighlight()
 //                Log.d("check", "false")
                 break
