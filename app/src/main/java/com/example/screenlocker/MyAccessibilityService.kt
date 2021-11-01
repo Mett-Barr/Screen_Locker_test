@@ -29,12 +29,10 @@ class MyAccessibilityService : AccessibilityService() {
 
     private fun lock() {
         // 切換方法要把註解取消
-        Log.d("APP!!!", "lock: start")
-        performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
-        Intent().also {
-            it.action = "finish"
-            applicationContext.sendBroadcast(it)
-        }
+//        Intent().also {
+//            it.action = "finish"
+//            applicationContext.sendBroadcast(it)
+//        }
 //        Log.d("TAG", "lock: ")
 //        val vibrator = getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
 //        vibrator.vibrate(VibrationEffect.createWaveform(t, a, -1))
@@ -42,9 +40,11 @@ class MyAccessibilityService : AccessibilityService() {
             mediaPlayer = MediaPlayer.create(this, R.raw.coconut2)
             mediaPlayer.also { it ->
                 it.start()
+                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+                Log.d("APP!!!", "lock: start")
                 it.setOnCompletionListener {
 //                    mediaPlayer.release()
-                    Log.d("APP!!!", "lock: Work!!!")
+                    Log.d("APP!!!", "lock: Done!!!")
 
                     Intent().also { intent ->
                         intent.action = "finish"
@@ -55,7 +55,7 @@ class MyAccessibilityService : AccessibilityService() {
 
                 (getSystemService(Service.VIBRATOR_SERVICE) as Vibrator).vibrate(
                     VibrationEffect.createWaveform(
-                        longArrayOf(0, 5, 160, 6),
+                        longArrayOf(50, 5, 160, 6),
                         intArrayOf(0, 255, 0, 255),
                         -1
                     )
