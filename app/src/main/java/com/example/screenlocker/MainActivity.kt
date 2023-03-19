@@ -88,6 +88,10 @@ class MainActivity : AppCompatActivity() {
         dmp = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 //        val pm = getSystemService(Context.POWER_SERVICE)
 
+
+//        // new way
+//        val intent = Intent("com.example.screenlocker.lock")
+//        sendBroadcast(intent)
         permissionCheck()
 
         val layout: View = findViewById(R.id.layout)
@@ -137,28 +141,58 @@ class MainActivity : AppCompatActivity() {
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         )
         mStringColonSplitter.setString(settingValue)
+
+        // new
+        val componentName = ComponentName(this, MyAccessibilityService::class.java)
+        val fullServiceName = componentName.flattenToString()
+
+//        while (mStringColonSplitter.hasNext()) {
+//            val accessibilityService = mStringColonSplitter.next()
+//
+////            Log.d("check", accessibilityService)
+//            if (accessibilityService.equals(fullServiceName, ignoreCase = true)) {
+////            if (accessibilityService.equals(appName, ignoreCase = true)) {
+//                Log.d("check", "true")
+//
+//
+//
+////                vibrator.vibrate(VibrationEffect.createWaveform(t, a, -1))
+//
+//
+//
+////                Log.d("TAG", "permissionCheck: ")
+//
+//
+//                // new way
+//                val intent = Intent("com.example.screenlocker.lock")
+//                sendBroadcast(intent)
+//
+////                break
+//            } else {
+//                Log.d("check", "false")
+//                launchNotificationPermissionSettingsPageAndHighlight()
+////                Log.d("check", "false")
+//                break
+//            }
+//        }
+
+        // new
+        var isServiceEnabled = false
         while (mStringColonSplitter.hasNext()) {
             val accessibilityService = mStringColonSplitter.next()
-
-//            Log.d("check", accessibilityService)
-            if (accessibilityService.equals(appName, ignoreCase = true)) {
-                Log.d("check", "true")
-
-
-
-//                vibrator.vibrate(VibrationEffect.createWaveform(t, a, -1))
-
-
-
-//                Log.d("TAG", "permissionCheck: ")
-
-                break
-            } else {
-                Log.d("check", "false")
-                launchNotificationPermissionSettingsPageAndHighlight()
-//                Log.d("check", "false")
+            if (accessibilityService.equals(fullServiceName, ignoreCase = true)) {
+                isServiceEnabled = true
                 break
             }
+        }
+
+        if (isServiceEnabled) {
+            Log.d("check", "true")
+            val intent = Intent("com.example.screenlocker.lock")
+            sendBroadcast(intent)
+        } else {
+            Log.d("check", "false")
+            launchNotificationPermissionSettingsPageAndHighlight()
         }
     }
 
